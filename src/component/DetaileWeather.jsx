@@ -23,8 +23,7 @@ const DetaleWeather = ({ data }) => {
                     </div>
                 </div>
                 <div className='w-5/12 flex justify-center items-center relative'>
-                    <div className="absolute top-0 left-1 text-white">南天门</div>
-                    <div className='w-5/6 h-5/6 rounded-lg bg-cover bg-no-repeat' style={{backgroundImage:'url(/src/assets/image/NTM.png)'}}></div>
+                    <div className='w-5/6 h-5/6 rounded-lg bg-cover bg-no-repeat' style={{backgroundImage:'url(/src/assets/image/WST.png)'}}></div>
                 </div>
             </div>
             <div className="flex h-1/5 justify-between p-4">

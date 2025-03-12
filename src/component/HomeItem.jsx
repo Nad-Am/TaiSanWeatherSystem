@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-const HomeItem = () => {
+const HomeItem = (props) => {
     const navigate = useNavigate();
 
     const handleTo = (path, place) => {
@@ -19,11 +19,11 @@ const HomeItem = () => {
             }}
         >
             <div className='pt-7 rounded-xl pb-7 w-1/2 bg-cover' style={{
-                backgroundImage: `url('/src/assets/image/HM.png')`
+                backgroundImage: `url(${props.img})`
             }}></div>
             <div className=" pb-7 w-1/2 ">
-                <div className='font-bold pl-2'>南天门</div>
-                <div className='pl-4 pt-1'>大雪</div>
+                <div className='font-bold pl-2'>{props.name}</div>
+                <div className='pl-4 pt-1'>{props.weather}</div>
             </div>
         </div>
     );
