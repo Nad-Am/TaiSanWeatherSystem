@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
+import { placeMap } from '../utils/Config';
 
-const TSMap = (props) => {
+const TSMap = ({place}) => {
   const chartRef = useRef(null);
   const myChart = useRef(null);
 
@@ -36,28 +37,37 @@ const TSMap = (props) => {
         name: node.name,
         x: node.x,
         y: node.y,
-        itemStyle: {
-            color: 'rgb(137,179,202)',
-            borderColor: '#fff',
-            borderWidth: 1
-        }
+        itemStyle: node.name === placeMap[place] ? {
+          color: 'rgb(28,229,132)',
+          borderColor: '#fff',
+          borderWidth: 1
+          }: {
+              color: 'rgb(137,179,202)',
+              borderColor: '#fff',
+              borderWidth: 1
+          }
     }))
 
     const links = linksmap.map(link => ({
         source: link.source,
         target: link.target,
-        lineStyle: {
-            color: 'rgb(98,137,169)',
-            width: 1,
-            curveness: 0.1
+        lineStyle: link.source === '中天门' && link.target === '月望峰' ? {
+          color: 'rgb(250,27,6)',
+          width: 1,
+          curveness: 0
+        }
+        : {
+          color: 'rgb(98,137,169)',
+          width: 1,
+          curveness: 0.2
         }
     }))
 
     // 节点点击事件处理函数
-    const handleNodeClick = (params) => {
-      console.log('节点被点击:', params);
-      alert(`你点击了节点: ${params.name}`);
-    };
+    // const handleNodeClick = (params) => {
+    //   console.log('节点被点击:', params);
+    //   alert(`你点击了节点: ${params.name}`);
+    // };
 
     const option = {
       title: {
@@ -73,7 +83,12 @@ const TSMap = (props) => {
         left: 'left', // 设置标题的水平位置，可选 'left', 'center', 'right'
         top: 'top' // 设置标题的垂直位置，可选 'top', 'middle', 'bottom'
       },
-      tooltip: {},
+      tooltip: {
+        trigger: 'item',
+        formatter: (e) => {
+          return e.name;
+        }
+      },
       animationDurationUpdate: 1500,
       animationEasingUpdate: 'quinticInOut',
       series: [
@@ -97,7 +112,7 @@ const TSMap = (props) => {
     myChart.current.setOption(option);
 
     // 为节点添加点击事件监听器
-    myChart.current.on('click', 'series', handleNodeClick);
+    // myChart.current.on('click', 'series', handleNodeClick);
     
     //  监听视口改变
     window.addEventListener('resize', () => {
@@ -105,13 +120,13 @@ const TSMap = (props) => {
     })
 
     return () => {
-      myChart.current.off('click', handleNodeClick); // 移除事件监听器
+      // myChart.current.off('click', handleNodeClick); // 移除事件监听器
       window.removeEventListener('resize', () => {
         myChart.current.resize();
       })
       myChart.current.dispose();
     };
-  });
+  },[place]);
 
   return (
     <>

@@ -1,18 +1,30 @@
 import React, { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 
-const Detaile = () => {
-
+const Detaile = ({place, data, forestCount, handleIndex}) => {
     // 创建图表容器的引用
     const chartRef = useRef(null);
     const chartInstance = useRef(null);
+    const indexRef = useRef(0);
+
+    const fortrun = () => {
+        if(indexRef.current === 0) return;
+        indexRef.current = indexRef.current - 1;
+        handleIndex(indexRef.current);
+    }
+
+    const backtrun = () => {
+        if(indexRef.current === 24/forestCount - 1) return;
+        indexRef.current = indexRef.current + 1;
+        handleIndex(indexRef.current);
+    }
 
 
     useEffect(() => {
         // 初始化图表
+        const now = new Date().getHours();
         if (chartRef.current) {
             chartInstance.current = echarts.init(chartRef.current);
-
             // 配置项
             const option = {
                 title: {
@@ -24,22 +36,25 @@ const Detaile = () => {
                         let result = `${params[0].axisValue}<br/>`;
                         params.forEach(function (param) {
                             result += `${param.seriesName}: ${param.value} ${
-                                param.seriesIndex === 0 ? '单位1' : param.seriesIndex === 1 ? '单位2' : '单位3'
+                                param.seriesIndex === 0 ? '°C' : param.seriesIndex === 1 ? '%' : '%'
                             }<br/>`;
                         });
                         return result;
                     }
                 },
                 legend: {
-                    data: ['数据1', '数据2', '数据3']
+                    data: ["温度", "湿度", "云覆盖度"],
+                    selectedMode: false,
                 },
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
-                    data: ['周一', '周二', '周三', '周四', '周五'],
+                    data: new Array(forestCount).fill(0).map((_, index) => {
+                        const hour = (now + index + indexRef.current * forestCount) % 24;
+                        return `${hour}:00`;
+                    }),
                     axisLine: {
-                        // show: true,
-                        onZero: true, // 不在零点显示
+                        // onZero: false, // 不在零点显示
                         lineStyle: {
                             color: '#000000'
                         }
@@ -57,11 +72,16 @@ const Detaile = () => {
                         type: 'value',
                         name: '°C',
                         position: 'left',
+                        max: Math.max(...data[0])+ 2,
+                        min: Math.min(...data[0]) - 3, // 设置Y轴的起始位置为-10
+                        scale: false, // 设置为false，让min和max生效
                         axisTick: {
                             show: true,
                         },
                         axisLabel: {
-                            formatter: '{value}'
+                            formatter:  function(value) {
+                                return value + '°C';
+                            }
                         },
                         axisLine: {
                             show: true,
@@ -76,12 +96,18 @@ const Detaile = () => {
                     {
                         type: 'value',
                         position: 'right',
+                        name: '%',
+                        max: Math.max(...data[1]) + 10,
+                        min: Math.min(...data[1]),
                         axisTick: {
-                            show: false,
+                            show: true,
                             alignWithLabel: true
                         },
                         axisLabel: {
                             formatter: '{value}'
+                        },
+                        axisLine: {
+                            show: false,
                         },
                         splitLine: {
                             show: false // 隐藏 Y 轴的基准线
@@ -91,6 +117,8 @@ const Detaile = () => {
                         type: 'value',
                         name: '',
                         position: 'right',
+                        max: Math.max(...data[2]) + 10,
+                        min: Math.min(...data[2]),
                         axisLine: {
                             show: false // 隐藏 Y 轴线
                         },
@@ -107,47 +135,52 @@ const Detaile = () => {
                 ],
                 series: [
                     {
-                        name: '数据1',
+                        name: '温度',
                         type: 'line',
                         yAxisIndex: 0, // 使用第一个 Y 轴
-                        data: [120, 132, 101, 134, 90],
+                        data: data[0],
                         itemStyle: {
                             color: '#ff0000'
                         },
-                        areaStyle: {
-                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                              {
-                                offset: 0,
-                                color: 'rgba(58,77,233,0.8)'
-                              },
-                              {
-                                offset: 1,
-                                color: 'rgba(58,77,233,0.3)'
-                              }
-                            ])
-                          },
+                        symbolSize: 0, // 节点大小
+                        // areaStyle: {
+                        //     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        //       {
+                        //         offset: 0,
+                        //         color: 'rgba(58,77,233,0.8)'
+                        //       },
+                        //       {
+                        //         offset: 1,
+                        //         color: 'rgba(58,77,233,0.3)'
+                        //       }
+                        //     ])
+                        //   },
                         smooth: true,
                     },
                     {
-                        name: '数据2',
+                        name: '湿度',
                         type: 'line',
                         yAxisIndex: 1, // 使用第二个 Y 轴
-                        data: [20, 40, 60, 80, 100],
+                        data: data[1],
+                        symbolSize: 0, // 节点大小
                         itemStyle: {
                             color: '#00ff00'
-                        }
+                        },
+                        smooth: true,
                     },
                     {
-                        name: '数据3',
+                        name: '云覆盖度',
                         type: 'line',
                         yAxisIndex: 2, // 使用第三个 Y 轴
-                        data: [100, 200, 100, 400, 500],
+                        data: data[2],
+                        symbolSize: 0, // 节点大小
                         itemStyle: {
                             color: '#0000ff'
-                        }
+                        },
+                        smooth: true,
                     }
                 ]
-            }
+            };
 
             // 应用配置项
             chartInstance.current.setOption(option);
@@ -165,13 +198,15 @@ const Detaile = () => {
                 chartInstance.current.dispose();
             };
         }
-    });
+    },[place,data]);
 
 
 
     return (
         <>
             <div ref={chartRef} className='w-full h-full'></div>
+            <div onClick={fortrun} className='absolute z-10 top-1/3 left-5 cursor-pointer text-white text-3xl'>{'<'}</div>
+            <div onClick={backtrun} className='absolute z-10 top-1/3 right-5 cursor-pointer text-white text-3xl'>{'>'}</div>
         </>
     );
 };

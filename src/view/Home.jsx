@@ -1,7 +1,7 @@
 import HomeItem from "../component/HomeItem";
 import { useState, useEffect } from "react";
-import {Icons} from "../utils/assetsConfig"
-import api from "../api";
+import {Icons,urlMap,getWeatherIcon} from "../utils/Config"
+import api,{ws} from "../api";
 const Home = () => {
 
     const [main,setmain] = useState({
@@ -14,42 +14,50 @@ const Home = () => {
         {
             name:'风向',
             icon:Icons.weather.window,
-            value:'...'
+            value:'...',
+            unit:''
         },
         {
             name:'风力',
             icon:Icons.weather.windowPo,
+            unit:'',
             value:'...'
         },
         {
             name:'风速',
             icon:Icons.weather.windowSp,
-            value:'...'
+            value:'...',
+            unit:'km/h'
         },
         {
             name:'气压',
             icon:Icons.weather.atmPre,
+            unit:'hPa',
             value:'...'
         },
         {
             name:'PM2.5',
             icon:Icons.weather.air,
-            value:'...'
+            value:'...',
+            unit:'ug/m3'
         },
         {
             name:'能见度',
             icon:Icons.weather.visibilty,
+            unit:'km',
             value:'...'
         }
     ])
 
+    const [weatherIcon, setWeatherIcon] = useState('');
+
     const fieldMap = {
-        '风向': 'windDirection',
-        '风力': 'windStrength',
-        '风速': 'windSpeedEnglish',
-        '气压': 'pressure',
+        '风向': 'pvdrWindDir',
+        '风力': 'pvdrWindSpd',
+        '风速': 'windSpd',
+        '气压': 'baro',
         'PM2.5': 'aqi',
-        '能见度': 'visibility'
+        '能见度': 'vis'
     };
 
     const [places, setPlaces] = useState([
@@ -81,22 +89,58 @@ const Home = () => {
     ])
 
     useEffect(() => {
-        api.get('/weathers').then((res) => {
-            const data = res;
+       let webs;
+       api.get('/api/weathers/forecast?location=NTM_URL').then(res=>{
+            const data = res.data.current;
             setmain({
-                wetaher:data.weatherZh,
-                humidity:data.humidity.slice(0,-1),
-                tmepC:data.tempC
+                wetaher:data.cap,
+                tmepC:data.feels,
+                humidity:data.temp
             })
-            const updatedItemList = itemList.map(item => {
-                const value = data[fieldMap[item.name]];
+            setWeatherIcon(getWeatherIcon(data.cap));
+            setItemList(itemList.map(item => {
+                const field = fieldMap[item.name];
                 return {
                     ...item,
-                    value: value
-                }
-            })
-            setItemList(updatedItemList);
-        });
+                    value: data[field]
+                };
+            }));
+            webs = ws('NTM_URL');
+            webs.onmessage = (e) => {
+                let data = JSON.parse(e.data);
+                data = data.current;
+                setmain({
+                    wetaher:data.cap,
+                    tmepC:data.feels,
+                    humidity:data.rh
+                })
+                setWeatherIcon(getWeatherIcon(data.cap));
+                setItemList(itemList.map(item => {
+                    const field = fieldMap[item.name];
+                    return {
+                        ...item,
+                        value: data[field]
+                    };
+                }));
+            }
+       })
+
+       const newPromis = places.map(item =>{
+        return api.get(`/api/weathers/location/${urlMap[item.name]}_URL`).then(res=>{
+            return {
+                ...item,
+                weather:res.data
+            }
+        })
+       })
+
+       Promise.all(newPromis).then(res=>{
+           setPlaces(res)
+       })
+       return () => {
+        if(!webs) return;
+        webs.close();
+       }
     }, []); // 明确指定依赖项数组为空数组
 
     return (
@@ -111,9 +155,9 @@ const Home = () => {
                     <div className="w-5/12 h-1/2  ">
                         <div className="w-full h-1/2 flex items-center">
                             <div className="w-24 h-24 bg-cover" style={{
-                                backgroundImage:`url(${Icons.weather.clear})`
+                                backgroundImage:`url(${weatherIcon})`
                             }}></div>
-                            <div className="w-1/2 h-24  text-2xl font-bold text-center p-5">{main.wetaher}天</div>
+                            <div className="w-1/2 h-24  text-2xl font-bold text-center p-5">{main.wetaher}</div>
                         </div>
                         <div className="w-full h-1/2 flex border-solid border-r-2 border-gray-400">
                             <div className="w-1/4 h-full bg-contain  bg-no-repeat">温度：</div>
@@ -145,7 +189,7 @@ const Home = () => {
                                         backgroundImage:`url(${item.icon})`
                                     }}></div>
                                 </div>
-                                <div className="m-1 font-bold mt-3 ml-3">{item.value}</div>
+                                <div className="m-1 font-bold mt-3 ml-3">{item.value + item.unit}</div>
                             </div>
                         ))}
                     </div>

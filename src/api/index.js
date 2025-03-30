@@ -1,24 +1,20 @@
-import axios from 'axios';
+import axios from "axios";
+const ws = (prams) =>{
+    const ws = new WebSocket(`ws://47.109.128.124:8080/ws/${prams}`);
+    return ws;
+}
+
 
 const api = axios.create({
-    baseURL:'http://localhost:5173/api',
+    baseURL:'http://localhost:5173/',
+    timeout:5000
 })
 
-api.interceptors.request.use(
-    (request) => request,
-    (error) => {
-        return Promise.reject(error)
-    }
-)
-
-api.interceptors.response.use((response)=>{
-    if(response.status === 200){
-        if(response.data.code == 200){
-            return response.data.data
-        }
-        return Promise.reject('请求出错了')
-    }
+api.interceptors.response.use((res)=>{
+    return res.data;
 })
-
 
 export default api;
+export {
+    ws
+};
