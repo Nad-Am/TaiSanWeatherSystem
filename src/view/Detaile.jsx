@@ -270,7 +270,7 @@ const Detaile = () => {
         <div className='w-full h-full flex flex-wrap justify-around items-center'>
             {/* 右侧导航栏 */}
             <div className='absolute flex w-20 top-24 -right-24 bg-cardBg3  h-4/6 flex-col'>
-                <div className="w-16 h-16 -top-20 bg-cover absolute" style={{backgroundImage: 'url(src/assets/icons/taisan/TS_1.png)'}}></div>
+                <div className="w-16 h-16 -top-20 bg-cover absolute" style={{backgroundImage: 'url(/assets/icons/taiSan/TS_1.png)'}}></div>
                 {navList.map((item,index)=>(
                     <div type='chekbox' key={index} onClick={()=>handleTurn(item.path)} className={item.path===place?activClass:inactivClass}>
                         <div className="w-4/5 h-2/3 bg-contain bg-no-repeat bg-center" style={{backgroundImage: `url(${Icons['taiSan'][item.path]})`}}></div>

@@ -30,7 +30,7 @@ const DetaleWeather = ({data, nowTime, place}) => {
                     </div>
                 </div>
                 <div className='w-5/12 flex justify-center items-center relative'>
-                    <div className='w-5/6 h-5/6 rounded-lg bg-cover bg-no-repeat' style={{backgroundImage:`url(/src/assets/image/${place}.png)`}}></div>
+                    <div className='w-5/6 h-5/6 rounded-lg bg-cover bg-no-repeat' style={{backgroundImage:`url(/assets/image/${place}.png)`}}></div>
                 </div>
             </div>
             <div className="flex h-1/5 justify-between p-4">

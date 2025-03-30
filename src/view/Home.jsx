@@ -64,27 +64,27 @@ const Home = () => {
         {
             name:'玉皇顶',
             weather:'晴天',
-            img:'/src/assets/image/YD.png',
+            img:'/assets/image/YD.png',
         },
         {
             name:'南天门',
             weather:'晴天',
-            img:'/src/assets/image/NTM.png',
+            img:'/assets/image/NTM.png',
         },
         {
             name:'五松亭',
             weather:'晴天',
-            img:'/src/assets/image/WST.png',
+            img:'/assets/image/WST.png',
         },
         {
             name:'中天门',
             weather:'晴天',
-            img:'/src/assets/image/ZTM.png',
+            img:'/assets/image/ZTM.png',
         },
         {
             name:'红门',
             weather:'晴天',
-            img:'/src/assets/image/HM.png',
+            img:'/assets/image/HM.png',
         }
     ])
 
@@ -164,7 +164,7 @@ const Home = () => {
             <div className=" border-b-2 border-solid text-2xl p-4 font-bold border-gray-400" style={{height:"10%"}}>泰山气象系统</div>
             <div className="flex justify-around items-center flex-wrap bg-cardBg" style={{height:"85%",marginTop:'2%'}}>
                 <div className=" h-5/6 rounded-2xl bg-cardBg w-6/12">
-                    <div className="h-5/6 w-full rounded-t-2xl bg-cover" style={{backgroundImage:`url('/src/assets/image/LB_${bgIndexRef.current}.png')`}}></div>
+                    <div className="h-5/6 w-full rounded-t-2xl bg-cover" style={{backgroundImage:`url('/assets/image/LB_${bgIndexRef.current}.png')`}}></div>
                     <h1 className="m-1 text-lg font-bold">泰山</h1>
                     <div className="m-2">泰山位于山东泰安，为五岳之首，主峰玉皇顶海拔1532.7米。地质复杂，以断裂构造，为主是山东丘陵最高山脉。泰山是帝王封禅之地，文化底蕴深厚，有日出、云海等自然景观，是世界文化与自然双重遗产。</div>
                 </div>

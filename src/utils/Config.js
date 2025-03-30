@@ -1,41 +1,41 @@
 
 export const Images = {
-    HM: '/src/assets/image/HM.png',
-    NTM: '/src/assets/image/NTM.png',
-    YD: '/src/assets/image/YD.png',
-    ZTM: '/src/assets/image/ZTM.png',
-    WST: '/src/assets/image/WST.png',
+    HM: '/assets/image/HM.png',
+    NTM: '/assets/image/NTM.png',
+    YD: '/assets/image/YD.png',
+    ZTM: '/assets/image/ZTM.png',
+    WST: '/assets/image/WST.png',
 }
 
 
 export const Icons  = {
     taiSan:{
-        HM: '/src/assets/icons/taiSan/HM.png',
-        NTM: '/src/assets/icons/taiSan/NTM.png',
-        YD: '/src/assets/icons/taiSan/YD.png',
-        ZTM: '/src/assets/icons/taiSan/ZTM.png',
-        WST: '/src/assets/icons/taiSan/WST.png',
+        HM: '/assets/icons/taiSan/HM.png',
+        NTM: '/assets/icons/taiSan/NTM.png',
+        YD: '/assets/icons/taiSan/YD.png',
+        ZTM: '/assets/icons/taiSan/ZTM.png',
+        WST: '/assets/icons/taiSan/WST.png',
     },
     weather:{
-        clear:'/src/assets/icons/weather/clear.png',
-        UV:'/src/assets/icons/weather/UV.png',
-        hazy:'/src/assets/icons/weather/hazy.png',
-        atmPre:'/src/assets/icons/weather/atmPre.png',
-        air:'/src/assets/icons/weather/air.png',
-        visibilty:'/src/assets/icons/weather/visibilty.png',
-        rainy:'/src/assets/icons/weather/rainy.png',
-        window:'/src/assets/icons/weather/window.png',
-        windowPo:'/src/assets/icons/weather/windowPo.png',
-        windowSp:'/src/assets/icons/weather/windowSp.png',
-        humidity:'/src/assets/icons/weather/humidity.png',
-        cloundy:'/src/assets/icons/weather/cloundy.png',
-        fog:'/src/assets/icons/weather/fog.png',
-        snow:'/src/assets/icons/weather/snow.png',
-        other:'/src/assets/icons/weather/other.png',
+        clear:'/assets/icons/weather/clear.png',
+        UV:'/assets/icons/weather/UV.png',
+        hazy:'/assets/icons/weather/hazy.png',
+        atmPre:'/assets/icons/weather/atmPre.png',
+        air:'/assets/icons/weather/air.png',
+        visibilty:'/assets/icons/weather/visibilty.png',
+        rainy:'/assets/icons/weather/rainy.png',
+        window:'/assets/icons/weather/window.png',
+        windowPo:'/assets/icons/weather/windowPo.png',
+        windowSp:'/assets/icons/weather/windowSp.png',
+        humidity:'/assets/icons/weather/humidity.png',
+        cloundy:'/assets/icons/weather/cloundy.png',
+        fog:'/assets/icons/weather/fog.png',
+        snow:'/assets/icons/weather/snow.png',
+        other:'/assets/icons/weather/other.png',
     },
     other:{
-        arrowRight:'/src/assets/icons/arrowRight.png',
-        query:'/src/assets/icons/query.png'
+        arrowRight:'/assets/icons/arrowRight.png',
+        query:'/assets/icons/query.png'
     }
 }
 

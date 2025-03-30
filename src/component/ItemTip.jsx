@@ -12,7 +12,7 @@ const tip = ({title, value, descrpit}) => {
         <div>
             <div className="relative text-xs">
                 {title}
-                <div onMouseEnter={()=>setActive(true)} onMouseLeave={()=>setActive(false)} className="absolute -right-4 top-0 w-3 h-3 bg-contain bg-center bg-no-repeat" style={{backgroundImage:'url(/src/assets/icons/query.png)'}}></div>
+                <div onMouseEnter={()=>setActive(true)} onMouseLeave={()=>setActive(false)} className="absolute -right-4 top-0 w-3 h-3 bg-contain bg-center bg-no-repeat" style={{backgroundImage:'url(/assets/icons/query.png)'}}></div>
                 <div className={active ? activClass : inactivClass}>{descrpit}</div>
             </div>
             <p className="text-sm">{value}</p>
