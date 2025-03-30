@@ -1,5 +1,5 @@
 import HomeItem from "../component/HomeItem";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {Icons,urlMap,getWeatherIcon} from "../utils/Config"
 import api,{ws} from "../api";
 const Home = () => {
@@ -88,8 +88,24 @@ const Home = () => {
         }
     ])
 
+    const bgIndexRef = useRef(1)
+
+    const handleBgIndex = () => {
+        let nextIndex = bgIndexRef.current + 1;
+        if(nextIndex > 5){
+            bgIndexRef.current = 1;
+            return
+        }
+        bgIndexRef.current =nextIndex;
+    }
+
     useEffect(() => {
        let webs;
+       let timer;
+       timer = setInterval(() => {
+            console.log('bgIndex',)
+            handleBgIndex()
+       }, 5000);
        api.get('/api/weathers/forecast?location=NTM_URL').then(res=>{
             const data = res.data.current;
             setmain({
@@ -138,8 +154,8 @@ const Home = () => {
            setPlaces(res)
        })
        return () => {
-        if(!webs) return;
-        webs.close();
+        if(webs) webs.close();
+        if(timer) clearInterval(timer);
        }
     }, []); // 明确指定依赖项数组为空数组
 
@@ -148,8 +164,9 @@ const Home = () => {
             <div className=" border-b-2 border-solid text-2xl p-4 font-bold border-gray-400" style={{height:"10%"}}>泰山气象系统</div>
             <div className="flex justify-around items-center flex-wrap bg-cardBg" style={{height:"85%",marginTop:'2%'}}>
                 <div className=" h-5/6 rounded-2xl bg-cardBg w-6/12">
-                    <div className="h-5/6 w-full rounded-t-2xl bg-cover" style={{backgroundImage:`url('/src/assets/image/LB_2.png')`}}></div>
-                    <div className="m-2">这里是相关的描述</div>
+                    <div className="h-5/6 w-full rounded-t-2xl bg-cover" style={{backgroundImage:`url('/src/assets/image/LB_${bgIndexRef.current}.png')`}}></div>
+                    <h1 className="m-1 text-lg font-bold">泰山</h1>
+                    <div className="m-2">泰山位于山东泰安，为五岳之首，主峰玉皇顶海拔1532.7米。地质复杂，以断裂构造，为主是山东丘陵最高山脉。泰山是帝王封禅之地，文化底蕴深厚，有日出、云海等自然景观，是世界文化与自然双重遗产。</div>
                 </div>
                 <div className="flex flex-wrap justify-around bg-cardBg rounded-2xl h-5/6 w-5/12" >
                     <div className="w-5/12 h-1/2  ">
