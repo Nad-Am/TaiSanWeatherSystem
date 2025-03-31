@@ -6,7 +6,7 @@ const ws = (prams) =>{
 
 
 const api = axios.create({
-    baseURL:'http://localhost:5173/',
+    baseURL:'http://47.109.128.124:8080/',
     timeout:5000
 })
 

@@ -43,7 +43,7 @@ const Detaile = ({place, data, forestCount, handleIndex}) => {
                     }
                 },
                 legend: {
-                    data: ["温度", "湿度", "云覆盖度"],
+                    data: ["温度", "湿度", "降水概率"],
                     selectedMode: false,
                 },
                 xAxis: {
@@ -169,7 +169,7 @@ const Detaile = ({place, data, forestCount, handleIndex}) => {
                         smooth: true,
                     },
                     {
-                        name: '云覆盖度',
+                        name: '降水概率',
                         type: 'line',
                         yAxisIndex: 2, // 使用第三个 Y 轴
                         data: data[2],

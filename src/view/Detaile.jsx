@@ -40,10 +40,10 @@ const Detaile = () => {
         items: [
             {
                 "name": "风速",
-                "key": "windSpd",
+                "key": "pvdrWindSpd",
                 "value": "...",
-                "unit": "km/h",
-                "descrpit": "风速表示空气流动的速度，通常分为微风（0-5km/h）、和风（6-19km/h）和强风（20km/h以上）。风速是气象学中衡量空气流动的重要指标，对户外活动和天气变化有直接影响。"
+                "unit": "",
+                "descrpit": "风级表示空气流动的速度，通常分为：无风（0级，0km/h，空气静止）、软风（1级，1-5km/h，几乎无感）、轻风（2级，6-11km/h，树叶轻摇）、微风（3级，12-19km/h，树叶摇动）、和风（4级，20-28km/h，影响活动）、强风（5级，29-38km/h，影响建筑）。"
             },
             {
                 "name": "湿度",
@@ -72,11 +72,25 @@ const Detaile = () => {
                 "value": "...",
                 "unit": "",
                 "descrpit": "紫外线指数表示紫外线辐射强度，通常分为低（0-2）、中等（3-5）和高（6-11+）。紫外线对人体皮肤和眼睛有直接影响，低紫外线可以放心外出，高紫外线需采取防护措施。"
+            },
+            {
+                name:'大风预警',
+                key:'evaluateWindLevel',
+                value:'...',
+                unit:'',
+                descrpit:'大风预警分等级，NoWarning无风险，WindWarning注意安全，Gale减少外出，StrongGale防风避高空。'
+
             }
         ]
 
     })
 
+    const windowLeveMap = {
+        NoWarning:'无风险',
+        WindWarning:'风警告',
+        Gale:'大风',
+        StrongGale:'强风'
+    }
     const [tipMessage, setTipMessage] = useState({
         clothes: '...',
         sun: ['...','...'],
@@ -100,8 +114,24 @@ const Detaile = () => {
                 name:'雷暴',
                 ksy:'blizzard',
                 value: false
+            },
+            {
+                name:'结冰',
+                ksy:'isFreezing',
+                value:false
+            },
+            {
+                name:'暴雪',
+                ksy:'freezingRain',
+                value:false
             }
         ]
+    })
+
+    const [windowDes, setWindowDes] = useState({
+        name:'大风',
+        ksy:'evaluateWindLevel',
+        value:false
     })
 
     const  Ropewaymessage = ['索道已关闭。将于每天上午8点开放，下午4点关闭。','由于天气原因索道已经关闭。','索道开放中。每天营业时间为上午8点到下午4点。']
@@ -127,7 +157,6 @@ const Detaile = () => {
 
         tableIndex.current = index;
         const forecast = detailInfo.forecast;
-        console.log(index,tableIndex.current);
         const newTabl = Array.from({ length: 3 }).map((item,index)=>{
             return new Array(forestCount).fill(0).map(( _,inerIndex)=>{
                 const iner = inerIndex + tableIndex.current;
@@ -146,7 +175,7 @@ const Detaile = () => {
             return;
         }
 
-        if(blizzard) {
+        if(blizzard || windowDes.value !== "NoWarning") {
             setRopeway(1)
             return;
         }
@@ -157,11 +186,17 @@ const Detaile = () => {
 
     useEffect(()=>{
         tableIndex.current = 0;
-        api.get(`/api/weathers/forecast?location=${place}_URL`).then(res=>{
+        api.get(`/weathers/forecast?location=${place}_URL`).then(res=>{
             setdetailInfo(res.data);
             const current = res.data.current;
             const forecast = res.data.forecast;
             const newItems = weather.items.map(item=>{
+                if(item.key === 'evaluateWindLevel'){
+                    return {
+                        ...item,
+                        value:windowLeveMap[current[item.key]]
+                    }
+                }
                 return {
                     ...item,
                     value:current[item.key]
@@ -194,7 +229,7 @@ const Detaile = () => {
                     const iner = inerIndex + tableIndex.current;
                     if(index === 0) return forecast[iner].temp;
                     if(index === 1) return forecast[iner].rh;
-                    if(index === 2) return forecast[iner].cloudCover;
+                    if(index === 2) return forecast[iner].precip;
                 })
             })
             setTable(newTabl);
@@ -206,7 +241,18 @@ const Detaile = () => {
                 setdetailInfo(res);
                 const current = res.current;
                 const forecast = res.forecast;
+                setWindowDes({
+                    name:'大风',
+                    ksy:'evaluateWindLevel',
+                    value:current.evaluateWindLevel
+                })
                 const newItems = weather.items.map(item=>{
+                    if(item.key === 'evaluateWindLevel'){
+                        return {
+                            ...item,
+                            value:windowLeveMap[current[item.key]]
+                        }
+                    }
                     return {
                         ...item,
                         value:current[item.key]
@@ -240,7 +286,7 @@ const Detaile = () => {
                         const iner = inerIndex + tableIndex.current;
                         if(index === 0) return forecast[iner].temp;
                         if(index === 1) return forecast[iner].rh;
-                        if(index === 2) return forecast[iner].cloudCover;
+                        if(index === 2) return forecast[iner].precip;
                     })
                 })
 
@@ -314,8 +360,8 @@ const Detaile = () => {
                         <h2>预测：</h2>
                         <div className='flex w-full justify-around'>
                             {tipMessage.pre.map((item,index)=>(
-                                <div key={index} className='p-2'>
-                                    {item.name}:<span className='m-1'>{item.value? '较大概率' : '无'}</span>
+                                <div key={index} className='pt-1'>
+                                    {item.name}:<span className='m-1'>{item.value? '可能' : '无'}</span>
                                 </div>
                             ))}
                         </div>
