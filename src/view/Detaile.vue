@@ -75,7 +75,7 @@ import DetaileWeather from "../component/DetaileWeather.vue";
 import TSMap from "../component/TSMap.vue";
 import TSTable from "../component/TSTable.vue";
 import { Icons, navList } from "../utils/Config";
-import api from "../api";
+import api, {ws} from "../api";
 
 export default {
   name: "Detail",
@@ -288,8 +288,9 @@ export default {
         });
         this.table = newTabl;
 
-        this.wsRef = new WebSocket(`ws://${place}_URL`);
+        this.wsRef = ws(place);
         this.wsRef.onmessage = (respon) => {
+          console.log('llll')
           const res = JSON.parse(respon.data);
           console.log(res);
           this.detailInfo = res;

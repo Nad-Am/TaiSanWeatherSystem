@@ -1,6 +1,6 @@
 import axios from "axios";
 const ws = (prams) =>{
-    const ws = new WebSocket(`ws://47.109.128.124:8080/ws/${prams}`);
+    const ws = new WebSocket(`ws://47.109.128.124:8080/ws/${prams}_URL`);
     return ws;
 }
 
