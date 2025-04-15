@@ -146,6 +146,13 @@ export default {
             unit: "",
             descrpit: "大风预警分等级，NoWarning无风险，WindWarning注意安全，Gale减少外出，StrongGale防风避高空。",
           },
+          {
+            name:'冰雹预警',
+            key:'hail',
+            value:'...',
+            unit:'',
+            descrpit:'有冰雹预警时注意安全哦'
+          }
         ],
       },
       windowLeveMap: {
@@ -180,6 +187,7 @@ export default {
       table: Array.from({ length: 3 }, () => Array(6).fill(0)),
       tableIndex: 0,
       wsRef: null,
+      oldString:''
     };
   },
   computed: {
@@ -200,6 +208,9 @@ export default {
     place: {
       immediate: true,
       handler(newVal) {
+        if (this.wsRef) {
+          this.wsRef.close();
+        }
         this.fetchData(newVal);
       },
     },
@@ -290,7 +301,6 @@ export default {
 
         this.wsRef = ws(place);
         this.wsRef.onmessage = (respon) => {
-          console.log('llll')
           const res = JSON.parse(respon.data);
           console.log(res);
           this.detailInfo = res;
@@ -346,7 +356,9 @@ export default {
 
           const oldString = [...this.table[0], ...this.table[1], ...this.table[2]].join("");
           const newString = [...newTabl[0], ...newTabl[1], ...newTabl[2]].join("");
+          // console.log(oldString,newString);
           if (oldString !== newString) {
+            console.log(this.table)
             this.table = newTabl;
           }
 
