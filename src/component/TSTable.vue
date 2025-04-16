@@ -53,6 +53,7 @@ export default {
         this.$nextTick(() => {
           this.initChart();
         });
+        this.indexRef = 0;
       },
     },
     data: {

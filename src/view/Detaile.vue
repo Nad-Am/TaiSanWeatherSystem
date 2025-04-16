@@ -211,6 +211,7 @@ export default {
         if (this.wsRef) {
           this.wsRef.close();
         }
+        this.tableIndex = 0;
         this.fetchData(newVal);
       },
     },
@@ -223,15 +224,14 @@ export default {
     },
     handleIndex(index) {
       if (index < 0 || index > 24 / this.forestCount - 1) return;
-
       this.tableIndex = index;
       const forecast = this.detailInfo.forecast;
       const newTabl = Array.from({ length: 3 }).map((item, index) => {
         return new Array(this.forestCount).fill(0).map((_, inerIndex) => {
-          const iner = inerIndex + this.tableIndex;
+          const iner = inerIndex + this.tableIndex * this.forestCount;
           if (index === 0) return forecast[iner].temp;
           if (index === 1) return forecast[iner].rh;
-          if (index === 2) return forecast[iner].cloudCover;
+          if (index === 2) return forecast[iner].precip;
         });
       });
       this.table = newTabl;
@@ -262,6 +262,12 @@ export default {
               value: this.windowLeveMap[current[item.key]],
             };
           }
+          if(item.key === 'hail'){
+            return {
+              ...item,
+              value: current[item.key] ? '有'  : '无',
+            }
+          }
           return {
             ...item,
             value: current[item.key],
@@ -291,7 +297,7 @@ export default {
 
         const newTabl = Array.from({ length: 3 }).map((item, index) => {
           return new Array(this.forestCount).fill(0).map((_, inerIndex) => {
-            const iner = inerIndex + this.tableIndex;
+            const iner = inerIndex + this.tableIndex * this.forestCount;
             if (index === 0) return forecast[iner].temp;
             if (index === 1) return forecast[iner].rh;
             if (index === 2) return forecast[iner].precip;
@@ -302,7 +308,6 @@ export default {
         this.wsRef = ws(place);
         this.wsRef.onmessage = (respon) => {
           const res = JSON.parse(respon.data);
-          console.log(res);
           this.detailInfo = res;
           const current = res.current;
           const forecast = res.forecast;
@@ -317,6 +322,12 @@ export default {
                 ...item,
                 value: this.windowLeveMap[current[item.key]],
               };
+            }
+            if(item.key === 'hail'){
+              return {
+                ...item,
+                value: current[item.key] ? '有'  : '无',
+              }
             }
             return {
               ...item,
@@ -347,7 +358,7 @@ export default {
 
           const newTabl = Array.from({ length: 3 }).map((item, index) => {
             return new Array(this.forestCount).fill(0).map((_, inerIndex) => {
-              const iner = inerIndex + this.tableIndex;
+              const iner = inerIndex + this.tableIndex * this.forestCount;
               if (index === 0) return forecast[iner].temp;
               if (index === 1) return forecast[iner].rh;
               if (index === 2) return forecast[iner].precip;
@@ -356,9 +367,7 @@ export default {
 
           const oldString = [...this.table[0], ...this.table[1], ...this.table[2]].join("");
           const newString = [...newTabl[0], ...newTabl[1], ...newTabl[2]].join("");
-          // console.log(oldString,newString);
           if (oldString !== newString) {
-            console.log(this.table)
             this.table = newTabl;
           }
 
