@@ -167,10 +167,10 @@ export default {
         pre: [
           { name: "雾凇", ksy: "rime", value: false },
           { name: "云海", ksy: "seaOfClouds", value: false },
-          { name: "冰雹", ksy: "freezingRain", value: false },
-          { name: "雷暴", ksy: "blizzard", value: false },
+          { name: "冻雨", ksy: "freezingRain", value: false },
+          { name: "雷暴", ksy: "thunder", value: false },
           { name: "结冰", ksy: "isFreezing", value: false },
-          { name: "暴雪", ksy: "freezingRain", value: false },
+          { name: "暴雪", ksy: "blizzard", value: false },
         ],
       },
       windowDes: {
@@ -367,6 +367,7 @@ export default {
 
           const oldString = [...this.table[0], ...this.table[1], ...this.table[2]].join("");
           const newString = [...newTabl[0], ...newTabl[1], ...newTabl[2]].join("");
+          console.log(oldString, newString);
           if (oldString !== newString) {
             this.table = newTabl;
           }
